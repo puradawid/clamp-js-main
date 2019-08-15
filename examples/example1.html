@@ -11,6 +11,16 @@
     body {
       width: 300px;
     }
+    .srt {
+      border: 0;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
   </style>
   <h1>Curabitur magna lectus, cursus at euismod sed, aliquet a lectus. Vivamus ac magna purus, in eleifend eros.</h1>
   <div>
@@ -36,7 +46,8 @@
     $clamp(paragraph, {
       clamp: 10,
       useNativeClamp: false,
-      animate: true
+      animate: true,
+      screenReaderClassName: "srt"
     });
   </script>
 </body>

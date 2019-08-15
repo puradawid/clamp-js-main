@@ -34,8 +34,9 @@
         useNativeClamp: typeof(options.useNativeClamp) != 'undefined' ? options.useNativeClamp : true,
         splitOnChars: options.splitOnChars || ['.', '-', '–', '—', ' '], //Split on sentences (periods), hypens, en-dashes, em-dashes, and words (spaces).
         animate: options.animate || false,
-        truncationChar: options.truncationChar || '…',
-        truncationHTML: options.truncationHTML
+        truncationChar: options.truncationChar || '...',
+        truncationHTML: options.truncationHTML ,
+        screenReaderClassName: options.screenReaderClassName
       },
 
       sty = element.style,
@@ -120,7 +121,8 @@
     var splitOnChars = opt.splitOnChars.slice(0),
       splitChar = splitOnChars[0],
       chunks,
-      lastChunk;
+      lastChunk,
+      hiddenChunks = '';
 
     /**
      * Gets an element's last child. That may be another node or a node's contents.
@@ -161,6 +163,7 @@
         splitChar = splitOnChars[0];
         chunks = null;
         lastChunk = null;
+        hiddenChunks = '';
       }
       // console.log(splitOnChars);
 
@@ -185,8 +188,10 @@
       if (chunks.length > 1) {
         // console.log('chunks', chunks);
         lastChunk = chunks.pop();
+        hiddenChunks = splitChar + lastChunk + hiddenChunks;
         // console.log('lastChunk', lastChunk);
-        applyEllipsis(target, chunks.join(splitChar));
+        // console.log('hiddenChunks', hiddenChunks);
+        applyEllipsis(target, chunks.join(splitChar), hiddenChunks);
       }
       //No more chunks can be removed using this character
       else {
@@ -206,7 +211,8 @@
           // console.log(element.clientHeight, maxHeight);
           //There's still more characters to try splitting on, not quite done yet
           if (splitOnChars.length >= 0 && splitChar !== '') {
-            applyEllipsis(target, chunks.join(splitChar) + splitChar + lastChunk);
+            hiddenChunks = hiddenChunks.substr(splitChar.length + lastChunk.length);
+            applyEllipsis(target, chunks.join(splitChar) + splitChar + lastChunk, hiddenChunks);
             chunks = null;
           }
           //Finished!
@@ -237,8 +243,10 @@
       }
     }
 
-    function applyEllipsis(elem, str) {
-      elem.nodeValue = str + opt.truncationChar;
+    function applyEllipsis(elem, str, rest) {
+      elem.nodeValue = str;
+      element.innerHTML = str + '<span aria-hidden="true">' + opt.truncationChar + '</span>' +
+        (rest ? '<span class="srt">' + rest + '</span>' : '');
     }
 
 
