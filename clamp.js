@@ -246,7 +246,7 @@
     function applyEllipsis(elem, str, rest) {
       elem.nodeValue = str;
       element.innerHTML = str + '<span aria-hidden="true">' + opt.truncationChar + '</span>' +
-        (rest ? '<span class="srt">' + rest + '</span>' : '');
+        (rest ? '<span class="' + screenReaderClassName + '">' + rest + '</span>' : '');
     }
 
 
